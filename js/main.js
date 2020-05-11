@@ -379,25 +379,25 @@ function polyPopup(e) {
           offset: new L.Point(0,0)
       }).openPopup();
     } else {
-	    var featureIdentifier = null;
+        var featureIdentifier = null;
 
-	    if (dataSelected[1] === "state-scale") {
-	    	featureIdentifier = "name";
-	    } else if (dataSelected[1] === "county-scale") {
-	    	featureIdentifier = "county_FIPS";
-	    }
+        if (dataSelected[1] === "state-scale") {
+            featureIdentifier = "name";
+        } else if (dataSelected[1] === "county-scale") {
+            featureIdentifier = "county_FIPS";
+        }
 
-    	var keyword = null;
+        var keyword = null;
 
-    	if (dataSelected[0] === "missing-persons") {
-	    	keyword = "missing";
-	    } else if (dataSelected[0] === "unidentified-persons") {
-	    	keyword = "unidentified";
-	    } else if (dataSelected[0] === "unclaimed-persons") {
-	    	keyword = "unclaimed";
-	    }
+        if (dataSelected[0] === "missing-persons") {
+            keyword = "missing";
+        } else if (dataSelected[0] === "unidentified-persons") {
+            keyword = "unidentified";
+        } else if (dataSelected[0] === "unclaimed-persons") {
+            keyword = "unclaimed";
+        }
 
-	    unitSelected = poly[featureIdentifier];
+        unitSelected = poly[featureIdentifier];
 
       if (dataFiltered) {
         polyPopupFromKeywordFiltered(e, poly, unitSelected, keyword, featureIdentifier)
@@ -408,32 +408,32 @@ function polyPopup(e) {
 }
 
 function polyPopupFromKeywordFiltered(e, poly, unitSelected, keyword, featureIdentifier) {
-	//Find the  index in filtered database of the currently selected feature
-	var targetIndex = -1;
+    //Find the  index in filtered database of the currently selected feature
+    var targetIndex = -1;
 
-	for (feature in currentDB.features){
-		if (featureIdentifier === "county_FIPS"
-			? Number(unitSelected) === Number(currentDB.features[feature][featureIdentifier])
-			: unitSelected === currentDB.features[feature][featureIdentifier]
-		) {
-	    	targetIndex = feature;
-	        break;
-	  }
-	}
+    for (feature in currentDB.features){
+        if (featureIdentifier === "county_FIPS"
+            ? Number(unitSelected) === Number(currentDB.features[feature][featureIdentifier])
+            : unitSelected === currentDB.features[feature][featureIdentifier]
+        ) {
+            targetIndex = feature;
+            break;
+      }
+    }
 
-	//For each feature, determine its value for the selected attribute
-	var attValue = Number(currentDB.features[targetIndex].properties.filtered.length);
+    //For each feature, determine its value for the selected attribute
+    var attValue = Number(currentDB.features[targetIndex].properties.filtered.length);
 
-	var popupContent = createPopupContentExtra(poly, attValue, keyword);
+    var popupContent = createPopupContentExtra(poly, attValue, keyword);
 
-	//bind the popup to the polygon
-	e.target.bindPopup(popupContent, {
-	    offset: new L.Point(0,-20)
-	}).openPopup();
+    //bind the popup to the polygon
+    e.target.bindPopup(popupContent, {
+        offset: new L.Point(0,-20)
+    }).openPopup();
 }
 
 function polyPopupFromKeywordUnfiltered(e, poly, keyword){
-	//For each feature, determine its value for the selected attribute
+    //For each feature, determine its value for the selected attribute
     var attValue = Number(poly.properties[keyword].length);
 
     var popupContent = createPopupContentExtra(poly, attValue, keyword);
@@ -1657,6 +1657,8 @@ function createLegend(attribute, keyword){
         }
     });
     map.addControl(new LegendControl());
+    //NICK MARKER
+    $("#loadingScreen").css("display", "none");
 };
 
 
@@ -1854,6 +1856,7 @@ function resetMap(){
     $(".secondary").css("display", "none");
     $(".legend-control-container").remove();
 
+    $("#loadingScreen").css("display", "block");
     // Get data differently depending on if it is filtered or not
     if (dataFiltered){
         getDataFiltered(map);
@@ -1861,11 +1864,10 @@ function resetMap(){
         getData(map);
     }
 
-    $("#loadingScreen").css("display", "block");
-    setTimeout(function() { // allow spinner to load before work starts
+    // setTimeout(function() { // allow spinner to load before work starts
 
-        $("#loadingScreen").css("display", "none");
-    },1500);
+    //     $("#loadingScreen").css("display", "none");
+    // },1500);
 
 
 }
